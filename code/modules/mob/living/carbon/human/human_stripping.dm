@@ -80,26 +80,6 @@ GLOBAL_LIST_INIT(strippable_human_items, create_strippable_list(list(
 	key = STRIPPABLE_ITEM_FEET
 	item_slot = ITEM_SLOT_FEET
 
-/datum/strippable_item/mob_item_slot/feet/get_alternate_action(atom/source, mob/user)
-	var/obj/item/clothing/shoes/shoes = get_item(source)
-	if (!istype(shoes) || !shoes.can_be_tied)
-		return null
-
-	switch (shoes.tied)
-		if (SHOES_UNTIED)
-			return "knot"
-		if (SHOES_TIED)
-			return "untie"
-		if (SHOES_KNOTTED)
-			return "unknot"
-
-/datum/strippable_item/mob_item_slot/feet/alternate_action(atom/source, mob/user)
-	var/obj/item/clothing/shoes/shoes = get_item(source)
-	if (!istype(shoes))
-		return
-
-	shoes.handle_tying(user)
-
 /datum/strippable_item/mob_item_slot/suit_storage
 	key = STRIPPABLE_ITEM_SUIT_STORAGE
 	item_slot = ITEM_SLOT_SUITSTORE

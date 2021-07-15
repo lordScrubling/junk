@@ -44,7 +44,7 @@
 	// Cyborgs buckle people by dragging them onto them, unless in combat mode.
 	if (iscyborg(user))
 		var/mob/living/silicon/robot/cyborg_user = user
-		if (!cyborg_user.combat_mode)
+		if (cyborg_user.a_intent != INTENT_HARM)
 			return
 
 	if (!isnull(should_strip_proc_path) && !call(source, should_strip_proc_path)(user))
@@ -63,9 +63,6 @@
 	/// The STRIPPABLE_ITEM_* key
 	var/key
 
-	/// Should we warn about dangerous clothing?
-	var/warn_dangerous_clothing = TRUE
-
 /// Gets the item from the given source.
 /datum/strippable_item/proc/get_item(atom/source)
 
@@ -82,20 +79,12 @@
 /// Start the equipping process. This is the proc you should yield in.
 /// Returns TRUE/FALSE depending on if it is allowed.
 /datum/strippable_item/proc/start_equip(atom/source, obj/item/equipping, mob/user)
-	if (warn_dangerous_clothing && isclothing(source))
-		var/obj/item/clothing/clothing = source
-		if(clothing.clothing_flags & DANGEROUS_OBJECT)
-			source.visible_message(
-				"<span class='danger'>[user] tries to put [equipping] on [source].</span>",
-				"<span class='userdanger'>[user] tries to put [equipping] on you.</span>",
-				ignored_mobs = user,
-			)
-		else
-			source.visible_message(
-				"<span class='notice'>[user] tries to put [equipping] on [source].</span>",
-				"<span class='notice'>[user] tries to put [equipping] on you.</span>",
-				ignored_mobs = user,
-			)
+	if(isclothing(source))
+		source.visible_message(
+			"<span class='notice'>[user] tries to put [equipping] on [source].</span>",
+			"<span class='notice'>[user] tries to put [equipping] on you.</span>",
+			ignored_mobs = user,
+		)
 
 	to_chat(user, "<span class='notice'>You try to put [equipping] on [source]...</span>")
 
@@ -265,7 +254,7 @@
 
 /// A utility function for `/datum/strippable_item`s to start unequipping an item from a mob.
 /proc/start_unequip_mob(obj/item/item, mob/source, mob/user, strip_delay)
-	if (!do_mob(user, source, strip_delay || item.strip_delay, interaction_key = REF(item)))
+	if (!do_mob(user, source, strip_delay || item.strip_delay))
 		return FALSE
 
 	return TRUE
@@ -472,7 +461,7 @@
 		if (
 			. == UI_UPDATE \
 			&& user.stat == CONSCIOUS \
-			&& living_user.body_position == LYING_DOWN \
+			&& !(living_user.mobility_flags & MOBILITY_STAND) \
 			&& user.Adjacent(owner)
 		)
 			return UI_INTERACTIVE

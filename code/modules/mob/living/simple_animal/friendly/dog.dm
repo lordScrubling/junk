@@ -182,7 +182,11 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 		equipping.forceMove(source.drop_location())
 		if (prob(25))
 			step_rand(equipping)
-		dance_rotate(source, set_original_dir = TRUE)
+		INVOKE_ASYNC(src, /mob.proc/emote, "me", 1, pick("dances around.","chases her tail."))
+		spawn(0)
+			for(var/i in list(1,2,4,8,4,2,1,2,4,8,4,2,1,2,4,8,4,2))
+				source.setDir(i)
+				sleep(1)
 
 		return FALSE
 
@@ -371,9 +375,6 @@ GLOBAL_LIST_INIT(strippable_corgi_items, create_strippable_list(list(
 			item_to_add.forceMove(drop_location())
 		if(prob(25))
 			step_rand(item_to_add)
-		for(var/i in list(1,2,4,8,4,8,4,dir))
-			setDir(i)
-			sleep(1)
 
 	return valid
 

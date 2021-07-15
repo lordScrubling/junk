@@ -724,11 +724,6 @@
 		unset_machine()
 		src << browse(null, t1)
 
-	if(href_list["refresh"])
-		if(machine && in_range(src, usr))
-			show_inv(machine)
-
-
 	if(href_list["item"] && usr.canUseTopic(src, BE_CLOSE, NO_DEXTERY))
 		var/slot = text2num(href_list["item"])
 		var/hand_index = text2num(href_list["hand_index"])
