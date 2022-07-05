@@ -1,7 +1,7 @@
 #define ENGINE_UNWRENCHED 0
 #define ENGINE_WRENCHED 1
 #define ENGINE_WELDED 2
-#define ENGINE_WELDTIME 200
+#define ENGINE_WELDTIME 2000
 
 /obj/structure/shuttle
 	name = "shuttle"
